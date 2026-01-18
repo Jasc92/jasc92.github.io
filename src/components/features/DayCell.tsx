@@ -66,6 +66,12 @@ export function DayCell({
         status.mandatoryCompleted < status.mandatoryTotal &&
         !isFuture;
 
+    // Check if ALL mandatory habits are complete (for celebration effect)
+    const allMandatoryComplete = status &&
+        status.mandatoryTotal > 0 &&
+        status.mandatoryCompleted === status.mandatoryTotal &&
+        !isFuture;
+
     const handleClick = () => {
         if (!isFuture && onClick) {
             onClick(date);
@@ -80,16 +86,19 @@ export function DayCell({
         ${isToday ? 'day-cell--today' : ''}
         ${isFuture ? 'day-cell--future' : ''}
         ${hasMissingMandatory ? 'day-cell--missing-mandatory' : ''}
+        ${allMandatoryComplete ? 'day-cell--all-mandatory' : ''}
         ${status && status.completedColors.length > 0 ? 'day-cell--has-completions' : ''}
       `.trim()}
             style={dotStyle}
             onClick={handleClick}
             disabled={isFuture}
-            aria-label={`Día ${day}${status ? `, ${status.completedColors.length} hábitos completados` : ''}`}
-            title={`Día ${day}`}
+            aria-label={`Día ${day}${status ? `, ${status.completedColors.length} hábitos completados` : ''}${allMandatoryComplete ? ' ✓ Todos los obligatorios!' : ''}`}
+            title={`Día ${day}${allMandatoryComplete ? ' ⭐' : ''}`}
         >
             {/* Today indicator ring */}
             {isToday && <span className="day-cell__today-ring" aria-hidden="true" />}
+            {/* Star for all mandatory complete */}
+            {allMandatoryComplete && <span className="day-cell__star" aria-hidden="true">★</span>}
         </button>
     );
 }

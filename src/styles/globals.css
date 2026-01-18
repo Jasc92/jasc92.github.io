@@ -661,8 +661,39 @@ body {
   box-shadow: 0 0 0 2px var(--color-error);
 }
 
+.day-cell--all-mandatory {
+  box-shadow: 0 0 8px 2px #fbbf24, 0 0 0 2px #f59e0b;
+  animation: goldPulse 2s ease-in-out infinite;
+}
+
+@keyframes goldPulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 8px 2px #fbbf24, 0 0 0 2px #f59e0b;
+  }
+
+  50% {
+    box-shadow: 0 0 12px 4px #fbbf24, 0 0 0 2px #f59e0b;
+  }
+}
+
 .day-cell--has-completions {
   box-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
+}
+
+.day-cell--all-mandatory.day-cell--has-completions {
+  box-shadow: 0 0 8px 2px #fbbf24, 0 0 0 2px #f59e0b;
+}
+
+.day-cell__star {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  font-size: 6px;
+  color: #fbbf24;
+  text-shadow: 0 0 3px #f59e0b;
+  pointer-events: none;
 }
 
 .day-cell__today-ring {
