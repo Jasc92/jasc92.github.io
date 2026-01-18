@@ -1,0 +1,6 @@
+# Robots.txt for Habit Tracker PWA
+User-agent: *
+Allow: /
+
+# Sitemap location (update when deployed)
+# Sitemap: https://yourdomain.com/sitemap.xml
