@@ -597,7 +597,21 @@ body {
   font-size: var(--text-sm);
   font-weight: 600;
   color: var(--color-text-secondary);
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-xs);
+  text-align: center;
+}
+
+.month-grid__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  margin-bottom: var(--space-xs);
+}
+
+.month-grid__weekday {
+  font-size: 8px;
+  font-weight: 600;
+  color: var(--color-text-muted);
   text-align: center;
 }
 
@@ -605,6 +619,13 @@ body {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 3px;
+}
+
+.month-grid__empty {
+  width: 100%;
+  aspect-ratio: 1;
+  min-width: 8px;
+  max-width: 16px;
 }
 
 /* ============================================
