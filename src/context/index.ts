@@ -5,3 +5,4 @@
  */
 
 export { NetworkProvider, useNetwork } from './NetworkContext';
+export { HabitProvider, useHabits } from './HabitContext';

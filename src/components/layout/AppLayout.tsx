@@ -1,5 +1,6 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { ConnectionStatus } from '../common';
+import { HabitMenu } from '../features/HabitMenu';
 import { usePWAInstall } from '../../hooks';
 
 /**
@@ -8,30 +9,35 @@ import { usePWAInstall } from '../../hooks';
 interface HeaderProps {
     /** Application title (default: 'Habit Tracker') */
     title?: string;
+    /** Menu toggle handler */
+    onMenuToggle: () => void;
 }
 
 /**
  * Header Component
  * 
- * Responsive header with app title, connection status, and install button.
- * Implements Mobile-First design with breakpoints for larger screens.
- * 
- * Accessibility Features:
- * - Semantic <header> element
- * - Proper heading hierarchy
- * - Focusable install button with descriptive label
- * 
- * @example
- * ```tsx
- * <Header title="My App" />
- * ```
+ * Responsive header with menu button, app title, connection status, and install button.
  */
-export function Header({ title = 'Habit Tracker' }: HeaderProps) {
+export function Header({ title = 'Habit Tracker', onMenuToggle }: HeaderProps) {
     const { canInstall, promptInstall } = usePWAInstall();
 
     return (
         <header className="header">
             <div className="header__container">
+                {/* Menu button */}
+                <button
+                    type="button"
+                    className="header__menu-btn"
+                    onClick={onMenuToggle}
+                    aria-label="Abrir menú"
+                >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+
                 {/* App Logo/Title */}
                 <div className="header__brand">
                     <h1 className="header__title">{title}</h1>
@@ -47,7 +53,7 @@ export function Header({ title = 'Habit Tracker' }: HeaderProps) {
                         <button
                             onClick={promptInstall}
                             className="header__install-btn"
-                            aria-label="Install application"
+                            aria-label="Instalar aplicación"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -64,7 +70,7 @@ export function Header({ title = 'Habit Tracker' }: HeaderProps) {
                                 <polyline points="7,10 12,15 17,10" />
                                 <line x1="12" y1="15" x2="12" y2="3" />
                             </svg>
-                            <span className="header__install-text">Install</span>
+                            <span className="header__install-text">Instalar</span>
                         </button>
                     )}
                 </div>
@@ -86,29 +92,30 @@ interface AppLayoutProps {
 /**
  * AppLayout Component
  * 
- * Main application layout implementing Mobile-First design.
- * Provides consistent structure across all pages with header,
- * main content area, and footer.
- * 
- * Layout Structure:
- * - Sticky header with navigation
- * - Flexible main content area
- * - Optional sticky footer
- * 
- * @example
- * ```tsx
- * <AppLayout headerTitle="Dashboard">
- *   <DashboardContent />
- * </AppLayout>
- * ```
- * 
- * Follows Open/Closed Principle - layout structure is fixed but
- * content is extensible through children prop
+ * Main application layout with header, habit menu, main content, and footer.
  */
 export function AppLayout({ children, headerTitle }: AppLayoutProps) {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const handleMenuToggle = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
+
+    const handleMenuClose = () => {
+        setIsMenuOpen(false);
+    };
+
     return (
         <div className="app-layout">
-            <Header title={headerTitle} />
+            <Header
+                title={headerTitle}
+                onMenuToggle={handleMenuToggle}
+            />
+
+            <HabitMenu
+                isOpen={isMenuOpen}
+                onClose={handleMenuClose}
+            />
 
             <main className="app-layout__main" role="main">
                 {children}

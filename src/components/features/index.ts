@@ -1,9 +1,11 @@
 /**
  * Feature components barrel export
- *
- * Add feature-specific components here as the app grows.
  */
 
-// Future exports will go here
-// export { HabitCard } from './HabitCard';
-// export { HabitList } from './HabitList';
+export { DayCell } from './DayCell';
+export { MonthGrid } from './MonthGrid';
+export { YearCalendar } from './YearCalendar';
+export { DayModal } from './DayModal';
+export { HabitForm } from './HabitForm';
+export { HabitEditModal } from './HabitEditModal';
+export { HabitMenu } from './HabitMenu';

@@ -3,3 +3,6 @@
  */
 
 export { StorageService } from './storage.service';
+export { HabitService } from './habit.service';
+export { HabitLogService } from './habitLog.service';
+export { NotificationService } from './notification.service';

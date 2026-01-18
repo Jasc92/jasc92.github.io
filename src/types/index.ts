@@ -7,6 +7,7 @@
 
 // Re-export domain-specific types
 export * from './pwa.types';
+export * from './habit.types';
 
 /**
  * Generic API Response wrapper
