@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useHabits } from '../../context';
 import { HabitForm } from './HabitForm';
 import { HabitEditModal } from './HabitEditModal';
+import { UpdateButton } from '../common';
 import type { Habit } from '../../types';
 
 interface HabitMenuProps {
@@ -187,6 +188,11 @@ export function HabitMenu({ isOpen, onClose }: HabitMenuProps) {
                             >
                                 + Añadir Hábito
                             </button>
+
+                            {/* Updates section */}
+                            <div className="habit-menu__updates">
+                                <UpdateButton />
+                            </div>
                         </>
                     )}
                 </div>

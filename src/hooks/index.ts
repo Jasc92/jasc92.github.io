@@ -7,3 +7,4 @@
 
 export { useNetworkStatus } from './useNetworkStatus';
 export { usePWAInstall } from './usePWAInstall';
+export { useSWUpdate } from './useSWUpdate';
