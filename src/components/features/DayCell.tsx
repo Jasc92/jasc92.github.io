@@ -67,9 +67,11 @@ export function DayCell({
         !isFuture;
 
     // Check if ALL mandatory habits are complete (for celebration effect)
+    // Only show celebration when NOT in filtered mode
     const allMandatoryComplete = status &&
         status.mandatoryTotal > 0 &&
         status.mandatoryCompleted === status.mandatoryTotal &&
+        !status.isFiltered &&
         !isFuture;
 
     const handleClick = () => {
@@ -95,6 +97,8 @@ export function DayCell({
             aria-label={`Día ${day}${status ? `, ${status.completedColors.length} hábitos completados` : ''}${allMandatoryComplete ? ' ✓ Todos los obligatorios!' : ''}`}
             title={`Día ${day}${allMandatoryComplete ? ' ⭐' : ''}`}
         >
+            {/* Day number in center */}
+            <span className="day-cell__number" aria-hidden="true">{day}</span>
             {/* Today indicator ring */}
             {isToday && <span className="day-cell__today-ring" aria-hidden="true" />}
             {/* Star for all mandatory complete */}

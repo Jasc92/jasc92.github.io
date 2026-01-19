@@ -180,9 +180,12 @@ export class HabitLogService {
                 }
             }
 
+            // Check if we're in filtered mode
+            const isFilterActive = habitFilter && habitFilter.length > 0;
+
             // Only add to map if there are relevant completions or we want to show empty mandatory slots
             // When filtering, we only care about the filtered habits
-            if (completedColors.length > 0 || (habitFilter && habitFilter.length > 0)) {
+            if (completedColors.length > 0 || isFilterActive) {
                 statusMap.set(date, {
                     date,
                     mandatoryCompleted,
@@ -190,8 +193,9 @@ export class HabitLogService {
                     optionalCompleted,
                     optionalTotal: optionalHabits.length,
                     completedColors,
+                    isFiltered: isFilterActive,
                 });
-            } else if (!habitFilter || habitFilter.length === 0) {
+            } else if (!isFilterActive) {
                 // Without filter, we maintain original behavior
                 statusMap.set(date, {
                     date,
@@ -200,6 +204,7 @@ export class HabitLogService {
                     optionalCompleted,
                     optionalTotal: optionalHabits.length,
                     completedColors,
+                    isFiltered: false,
                 });
             }
         }

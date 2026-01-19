@@ -109,6 +109,8 @@ export interface DayStatus {
     optionalTotal: number;
     /** List of completed habit colors for visual display */
     completedColors: string[];
+    /** Whether this status is from a filtered view (celebration effect should be disabled) */
+    isFiltered?: boolean;
 }
 
 /**
