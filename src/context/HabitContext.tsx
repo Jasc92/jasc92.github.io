@@ -100,6 +100,13 @@ export function HabitProvider({ children }: HabitProviderProps) {
         loadData();
     }, [loadData]);
 
+    // Update dayStatusMap when filter selection changes
+    useEffect(() => {
+        if (habits.length > 0) {
+            setDayStatusMap(HabitLogService.getDayStatusMap(currentYear, habits, selectedHabitIds));
+        }
+    }, [currentYear, habits, selectedHabitIds]);
+
     /**
      * Create a new habit
      */
