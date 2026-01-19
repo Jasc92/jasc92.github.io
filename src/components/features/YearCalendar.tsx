@@ -40,36 +40,39 @@ export function YearCalendar() {
 
     return (
         <div className="year-calendar">
-            {/* Year Navigation */}
-            <div className="year-calendar__header">
-                <button
-                    type="button"
-                    className="year-calendar__nav-btn"
-                    onClick={handlePreviousYear}
-                    aria-label="Año anterior"
-                >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <polyline points="15,18 9,12 15,6" />
-                    </svg>
-                </button>
+            {/* Compact Header: Year Navigation + Filter */}
+            <div className="year-calendar__controls">
+                {/* Year Navigation */}
+                <div className="year-calendar__year-nav">
+                    <button
+                        type="button"
+                        className="year-calendar__nav-btn"
+                        onClick={handlePreviousYear}
+                        aria-label="Año anterior"
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="15,18 9,12 15,6" />
+                        </svg>
+                    </button>
 
-                <h2 className="year-calendar__year">{currentYear}</h2>
+                    <h2 className="year-calendar__year">{currentYear}</h2>
 
-                <button
-                    type="button"
-                    className="year-calendar__nav-btn"
-                    onClick={handleNextYear}
-                    disabled={!canGoForward}
-                    aria-label="Año siguiente"
-                >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <polyline points="9,6 15,12 9,18" />
-                    </svg>
-                </button>
+                    <button
+                        type="button"
+                        className="year-calendar__nav-btn"
+                        onClick={handleNextYear}
+                        disabled={!canGoForward}
+                        aria-label="Año siguiente"
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="9,6 15,12 9,18" />
+                        </svg>
+                    </button>
+                </div>
+
+                {/* Filter */}
+                {habits.length > 0 && <HabitFilter />}
             </div>
-
-            {/* Filter */}
-            {habits.length > 0 && <HabitFilter />}
 
             {/* Months Grid */}
             <div className="year-calendar__months">

@@ -459,22 +459,31 @@ body {
    Year Calendar Component
    ============================================ */
 .year-calendar {
-  padding: var(--space-md) 0;
+  padding: var(--space-sm) 0;
 }
 
-.year-calendar__header {
+/* Compact controls container: year nav + filter on same row */
+.year-calendar__controls {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: var(--space-lg);
-  margin-bottom: var(--space-xl);
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.year-calendar__year-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-shrink: 0;
 }
 
 .year-calendar__year {
-  font-size: var(--text-2xl);
-  font-weight: 700;
+  font-size: var(--text-lg);
+  font-weight: 600;
   color: var(--color-text-primary);
-  min-width: 100px;
+  min-width: 60px;
   text-align: center;
 }
 
@@ -482,8 +491,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   background: var(--color-bg-secondary);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -503,8 +512,8 @@ body {
 }
 
 .year-calendar__nav-btn svg {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
 }
 
 .year-calendar__months {
@@ -1428,32 +1437,32 @@ body {
    Habit Filter Component
    ============================================ */
 .habit-filter {
-  margin-bottom: var(--space-xl);
+  flex: 1;
+  min-width: 0;
   animation: fadeIn 0.3s ease;
 }
 
 .habit-filter__header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  margin-bottom: var(--space-sm);
-  padding: 0 var(--space-xs);
+  gap: var(--space-sm);
 }
 
 .habit-filter__title {
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--color-text-muted);
 }
 
 .habit-filter__clear-btn {
   background: none;
   border: none;
   color: var(--color-primary);
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   font-weight: 500;
   cursor: pointer;
-  padding: var(--space-xs) var(--space-sm);
+  padding: 2px var(--space-xs);
   border-radius: var(--radius-sm);
   transition: all var(--transition-fast);
 }
@@ -1465,20 +1474,22 @@ body {
 .habit-filter__list {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
+  justify-content: flex-end;
 }
 
 .habit-chip {
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
-  padding: var(--space-xs) var(--space-md);
+  gap: 4px;
+  padding: 2px var(--space-sm);
   background-color: var(--color-bg-secondary);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-full);
   cursor: pointer;
   transition: all var(--transition-base);
   opacity: 0.7;
+  font-size: var(--text-xs);
 }
 
 .habit-chip:hover {
@@ -1491,17 +1502,17 @@ body {
   background-color: rgba(255, 255, 255, 0.05);
   border-color: var(--habit-color);
   opacity: 1;
-  box-shadow: 0 0 10px -2px var(--habit-color);
+  box-shadow: 0 0 8px -2px var(--habit-color);
 }
 
 .habit-chip__dot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
 }
 
 .habit-chip__label {
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   font-weight: 500;
   color: var(--color-text-primary);
 }

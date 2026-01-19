@@ -27,23 +27,21 @@ export function HabitFilter() {
 
     return (
         <div className="habit-filter fade-in">
-            <div className="habit-filter__header">
-                <span className="habit-filter__title">
-                    {hasSelection
-                        ? `${activeCount} de ${habits.length} hábitos seleccionados`
-                        : 'Filtrar por hábito'}
-                </span>
-
-                {hasSelection && (
+            {/* Only show header when there's active filtering */}
+            {hasSelection && (
+                <div className="habit-filter__header">
+                    <span className="habit-filter__title">
+                        {activeCount}/{habits.length}
+                    </span>
                     <button
                         onClick={clearHabitFilters}
                         className="habit-filter__clear-btn"
                         type="button"
                     >
-                        Ver todos
+                        ✕
                     </button>
-                )}
-            </div>
+                </div>
+            )}
 
             <div className="habit-filter__list">
                 {sortedHabits.map((habit: Habit) => {
