@@ -43,6 +43,11 @@ interface HabitContextValue {
     // Navigation
     setYear: (year: number) => void;
 
+    // Filtering
+    selectedHabitIds: string[];
+    toggleHabitFilter: (habitId: string) => void;
+    clearHabitFilters: () => void;
+
     // Refresh data
     refreshData: () => void;
 }
@@ -62,6 +67,7 @@ interface HabitProviderProps {
 export function HabitProvider({ children }: HabitProviderProps) {
     const [habits, setHabits] = useState<Habit[]>([]);
     const [dayStatusMap, setDayStatusMap] = useState<Map<string, DayStatus>>(new Map());
+    const [selectedHabitIds, setSelectedHabitIds] = useState<string[]>([]);
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const [settings, setSettings] = useState<HabitSettings>({
         notificationsEnabled: false,
@@ -77,7 +83,7 @@ export function HabitProvider({ children }: HabitProviderProps) {
 
         const loadedHabits = HabitService.getHabits();
         const loadedSettings = HabitService.getSettings();
-        const statusMap = HabitLogService.getDayStatusMap(currentYear, loadedHabits);
+        const statusMap = HabitLogService.getDayStatusMap(currentYear, loadedHabits, selectedHabitIds);
 
         setHabits(loadedHabits);
         setSettings(loadedSettings);
@@ -87,7 +93,7 @@ export function HabitProvider({ children }: HabitProviderProps) {
         NotificationService.initializeReminders(loadedHabits);
 
         setIsLoading(false);
-    }, [currentYear]);
+    }, [currentYear, selectedHabitIds]);
 
     // Load data on mount and when year changes
     useEffect(() => {
@@ -141,14 +147,23 @@ export function HabitProvider({ children }: HabitProviderProps) {
         const success = HabitService.deleteHabit(id);
 
         if (success) {
+            // Remove from selection if present
+            if (selectedHabitIds.includes(id)) {
+                setSelectedHabitIds(prev => prev.filter(hId => hId !== id));
+            }
+
             // Refresh local state
             const updatedHabits = HabitService.getHabits();
             setHabits(updatedHabits);
-            setDayStatusMap(HabitLogService.getDayStatusMap(currentYear, updatedHabits));
+            // Note: we can't use existing selectedHabitIds here directly inside a callback if it's stale, 
+            // but we're reloading everything.
+            // However, since we might have just removed the selected ID, we should use the filtered list.
+            const currentSelected = selectedHabitIds.filter(hId => hId !== id);
+            setDayStatusMap(HabitLogService.getDayStatusMap(currentYear, updatedHabits, currentSelected));
         }
 
         return success;
-    }, [currentYear]);
+    }, [currentYear, selectedHabitIds]);
 
     /**
      * Toggle habit completion for a date
@@ -157,10 +172,10 @@ export function HabitProvider({ children }: HabitProviderProps) {
         const newStatus = HabitLogService.toggleCompletion(habitId, date);
 
         // Refresh day status map
-        setDayStatusMap(HabitLogService.getDayStatusMap(currentYear, habits));
+        setDayStatusMap(HabitLogService.getDayStatusMap(currentYear, habits, selectedHabitIds));
 
         return newStatus;
-    }, [currentYear, habits]);
+    }, [currentYear, habits, selectedHabitIds]);
 
     /**
      * Set completion status for a specific date
@@ -169,8 +184,8 @@ export function HabitProvider({ children }: HabitProviderProps) {
         HabitLogService.setCompletion(habitId, date, completed);
 
         // Refresh day status map
-        setDayStatusMap(HabitLogService.getDayStatusMap(currentYear, habits));
-    }, [currentYear, habits]);
+        setDayStatusMap(HabitLogService.getDayStatusMap(currentYear, habits, selectedHabitIds));
+    }, [currentYear, habits, selectedHabitIds]);
 
     /**
      * Check if habit is completed for a date
@@ -185,6 +200,28 @@ export function HabitProvider({ children }: HabitProviderProps) {
     const setYear = useCallback((year: number): void => {
         setCurrentYear(year);
         HabitService.updateSettings({ currentYear: year });
+    }, []);
+
+    /**
+     * Toggle habit selection for filtering
+     */
+    const toggleHabitFilter = useCallback((habitId: string) => {
+        setSelectedHabitIds(prev => {
+            const newSelection = prev.includes(habitId)
+                ? prev.filter(id => id !== habitId)
+                : [...prev, habitId];
+
+            // We need to trigger a status map update when selection changes
+            // Use setTimeout to allow state to settle or simpler: relying on useEffect dependency
+            return newSelection;
+        });
+    }, []);
+
+    /**
+     * Clear all habit filters
+     */
+    const clearHabitFilters = useCallback(() => {
+        setSelectedHabitIds([]);
     }, []);
 
     /**
@@ -207,6 +244,9 @@ export function HabitProvider({ children }: HabitProviderProps) {
         setCompletion,
         isCompleted,
         setYear,
+        selectedHabitIds,
+        toggleHabitFilter,
+        clearHabitFilters,
         refreshData,
     };
 

@@ -131,15 +131,26 @@ export class HabitLogService {
      * 
      * @param year - Year to get data for
      * @param habits - List of habits to check against
+     * @param habitFilter - Optional list of habit IDs to filter by
      * @returns Map of date strings to DayStatus
      */
-    static getDayStatusMap(year: number, habits: Habit[]): Map<string, DayStatus> {
+    static getDayStatusMap(year: number, habits: Habit[], habitFilter?: string[]): Map<string, DayStatus> {
         const logs = this.getLogsForYear(year);
         const statusMap = new Map<string, DayStatus>();
 
+        // Filter habits if filter is active
+        const activeHabits = habitFilter && habitFilter.length > 0
+            ? habits.filter(h => habitFilter.includes(h.id))
+            : habits;
+
+        // Also filter logs if filter is active to prevent processing irrelevant logs
+        const activeLogs = habitFilter && habitFilter.length > 0
+            ? logs.filter(log => habitFilter.includes(log.habitId))
+            : logs;
+
         // Group logs by date
         const logsByDate = new Map<string, HabitLog[]>();
-        for (const log of logs) {
+        for (const log of activeLogs) {
             if (!logsByDate.has(log.date)) {
                 logsByDate.set(log.date, []);
             }
@@ -148,8 +159,8 @@ export class HabitLogService {
 
         // Calculate status for each date that has logs
         for (const [date, dateLogs] of logsByDate) {
-            const mandatoryHabits = habits.filter(h => h.mandatory);
-            const optionalHabits = habits.filter(h => !h.mandatory);
+            const mandatoryHabits = activeHabits.filter(h => h.mandatory);
+            const optionalHabits = activeHabits.filter(h => !h.mandatory);
 
             let mandatoryCompleted = 0;
             let optionalCompleted = 0;
@@ -157,7 +168,7 @@ export class HabitLogService {
 
             for (const log of dateLogs) {
                 if (log.completed) {
-                    const habit = habits.find(h => h.id === log.habitId);
+                    const habit = activeHabits.find(h => h.id === log.habitId);
                     if (habit) {
                         completedColors.push(habit.color);
                         if (habit.mandatory) {
@@ -169,14 +180,28 @@ export class HabitLogService {
                 }
             }
 
-            statusMap.set(date, {
-                date,
-                mandatoryCompleted,
-                mandatoryTotal: mandatoryHabits.length,
-                optionalCompleted,
-                optionalTotal: optionalHabits.length,
-                completedColors,
-            });
+            // Only add to map if there are relevant completions or we want to show empty mandatory slots
+            // When filtering, we only care about the filtered habits
+            if (completedColors.length > 0 || (habitFilter && habitFilter.length > 0)) {
+                statusMap.set(date, {
+                    date,
+                    mandatoryCompleted,
+                    mandatoryTotal: mandatoryHabits.length,
+                    optionalCompleted,
+                    optionalTotal: optionalHabits.length,
+                    completedColors,
+                });
+            } else if (!habitFilter || habitFilter.length === 0) {
+                // Without filter, we maintain original behavior
+                statusMap.set(date, {
+                    date,
+                    mandatoryCompleted,
+                    mandatoryTotal: mandatoryHabits.length,
+                    optionalCompleted,
+                    optionalTotal: optionalHabits.length,
+                    completedColors,
+                });
+            }
         }
 
         return statusMap;

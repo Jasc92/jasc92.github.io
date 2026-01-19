@@ -3,6 +3,8 @@ import { useHabits } from '../../context';
 import { MonthGrid } from './MonthGrid';
 import { DayModal } from './DayModal';
 
+import { HabitFilter } from './HabitFilter';
+
 /**
  * YearCalendar Component
  * 
@@ -65,6 +67,9 @@ export function YearCalendar() {
                     </svg>
                 </button>
             </div>
+
+            {/* Filter */}
+            {habits.length > 0 && <HabitFilter />}
 
             {/* Months Grid */}
             <div className="year-calendar__months">
