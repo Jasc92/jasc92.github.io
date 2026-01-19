@@ -159,8 +159,19 @@ export class HabitLogService {
 
         // Calculate status for each date that has logs
         for (const [date, dateLogs] of logsByDate) {
-            const mandatoryHabits = activeHabits.filter(h => h.mandatory);
-            const optionalHabits = activeHabits.filter(h => !h.mandatory);
+            // Filter habits to only include those that had started by this date
+            const habitsActiveOnDate = activeHabits.filter(h => {
+                // If habit has a startDate, only count it if the date >= startDate
+                if (h.startDate) {
+                    return date >= h.startDate;
+                }
+                // Legacy habits without startDate: use createdAt date
+                const createdDate = h.createdAt.split('T')[0];
+                return date >= createdDate;
+            });
+
+            const mandatoryHabits = habitsActiveOnDate.filter(h => h.mandatory);
+            const optionalHabits = habitsActiveOnDate.filter(h => !h.mandatory);
 
             let mandatoryCompleted = 0;
             let optionalCompleted = 0;
@@ -168,7 +179,7 @@ export class HabitLogService {
 
             for (const log of dateLogs) {
                 if (log.completed) {
-                    const habit = activeHabits.find(h => h.id === log.habitId);
+                    const habit = habitsActiveOnDate.find(h => h.id === log.habitId);
                     if (habit) {
                         completedColors.push(habit.color);
                         if (habit.mandatory) {

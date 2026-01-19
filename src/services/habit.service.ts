@@ -77,6 +77,7 @@ export class HabitService {
      */
     static createHabit(data: CreateHabitData): Habit {
         const state = this.getState();
+        const today = new Date().toISOString().split('T')[0];
 
         const newHabit: Habit = {
             id: generateId(),
@@ -84,6 +85,7 @@ export class HabitService {
             color: data.color,
             mandatory: data.mandatory,
             createdAt: new Date().toISOString(),
+            startDate: data.startDate || today,
         };
 
         state.habits.push(newHabit);

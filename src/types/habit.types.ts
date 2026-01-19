@@ -19,6 +19,8 @@ export interface Habit {
     mandatory: boolean;
     /** Creation timestamp */
     createdAt: string;
+    /** Start date for tracking in "YYYY-MM-DD" format - days before this won't count as missed */
+    startDate: string;
 }
 
 /**
@@ -41,6 +43,7 @@ export interface CreateHabitData {
     name: string;
     color: string;
     mandatory: boolean;
+    startDate?: string;
 }
 
 /**
@@ -50,6 +53,7 @@ export interface UpdateHabitData {
     name?: string;
     color?: string;
     mandatory?: boolean;
+    startDate?: string;
 }
 
 /**

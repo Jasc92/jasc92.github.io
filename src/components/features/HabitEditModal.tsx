@@ -17,42 +17,16 @@ interface HabitEditModalProps {
  * - Change name
  * - Change color
  * - Toggle mandatory
- * - Add completions for past days
+ * - Set start date
  */
 export function HabitEditModal({ habit, onClose }: HabitEditModalProps) {
-    const { updateHabit, setCompletion } = useHabits();
+    const { updateHabit } = useHabits();
 
     const [name, setName] = useState(habit.name);
     const [color, setColor] = useState<string>(habit.color);
     const [mandatory, setMandatory] = useState(habit.mandatory);
-    const [pastDate, setPastDate] = useState('');
+    const [startDate, setStartDate] = useState(habit.startDate || habit.createdAt.split('T')[0]);
     const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState<string | null>(null);
-
-    const handleAddPastDay = () => {
-        if (!pastDate) {
-            setError('Selecciona una fecha');
-            return;
-        }
-
-        // Check date is not in the future
-        const selectedDate = new Date(pastDate);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        if (selectedDate > today) {
-            setError('No puedes marcar días futuros');
-            return;
-        }
-
-        setCompletion(habit.id, pastDate, true);
-        setSuccess(`Día ${pastDate} marcado como completado`);
-        setPastDate('');
-        setError(null);
-
-        // Clear success after 3 seconds
-        setTimeout(() => setSuccess(null), 3000);
-    };
 
     const handleSave = () => {
         if (!name.trim()) {
@@ -64,6 +38,7 @@ export function HabitEditModal({ habit, onClose }: HabitEditModalProps) {
             name: name.trim(),
             color,
             mandatory,
+            startDate,
         });
 
         onClose();
@@ -109,39 +84,28 @@ export function HabitEditModal({ habit, onClose }: HabitEditModalProps) {
                     </button>
                 </div>
 
-                {/* Add past day section */}
-                <div className="habit-edit__past-section">
-                    <h4 className="habit-edit__section-title">Añadir día pasado</h4>
-                    <p className="habit-edit__section-desc">
-                        ¿Olvidaste marcar un día? Añádelo aquí.
+                {/* Start date */}
+                <div className="habit-form__field">
+                    <label className="habit-form__label" htmlFor="edit-start-date">
+                        Fecha de inicio
+                    </label>
+                    <p className="habit-form__hint">
+                        Los días anteriores no contarán como incompletos
                     </p>
-                    <div className="habit-edit__past-row">
-                        <input
-                            type="date"
-                            className="habit-form__input"
-                            value={pastDate}
-                            onChange={(e) => setPastDate(e.target.value)}
-                            max={today}
-                        />
-                        <button
-                            type="button"
-                            className="habit-form__btn habit-form__btn--secondary"
-                            onClick={handleAddPastDay}
-                        >
-                            Añadir
-                        </button>
-                    </div>
+                    <input
+                        id="edit-start-date"
+                        type="date"
+                        className="habit-form__input"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        max={today}
+                    />
                 </div>
 
-                {/* Messages */}
+                {/* Error message */}
                 {error && (
                     <p className="habit-form__error" role="alert">
                         {error}
-                    </p>
-                )}
-                {success && (
-                    <p className="habit-form__success" role="status">
-                        {success}
                     </p>
                 )}
 
