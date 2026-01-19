@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useHabits } from '../../context';
 import { MonthGrid } from './MonthGrid';
 import { DayModal } from './DayModal';
-
 import { HabitFilter } from './HabitFilter';
 
 /**
@@ -12,16 +11,8 @@ import { HabitFilter } from './HabitFilter';
  * Each day is represented as a colored dot indicating habit completion.
  */
 export function YearCalendar() {
-    const { currentYear, dayStatusMap, setYear, habits } = useHabits();
+    const { currentYear, dayStatusMap, habits } = useHabits();
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
-
-    const handlePreviousYear = () => {
-        setYear(currentYear - 1);
-    };
-
-    const handleNextYear = () => {
-        setYear(currentYear + 1);
-    };
 
     const handleDayClick = (date: string) => {
         // Only open modal if there are habits
@@ -34,45 +25,10 @@ export function YearCalendar() {
         setSelectedDate(null);
     };
 
-    // Current year check for navigation limits
-    const currentRealYear = new Date().getFullYear();
-    const canGoForward = currentYear < currentRealYear;
-
     return (
         <div className="year-calendar">
-            {/* Compact Header: Year Navigation + Filter */}
-            <div className="year-calendar__controls">
-                {/* Year Navigation */}
-                <div className="year-calendar__year-nav">
-                    <button
-                        type="button"
-                        className="year-calendar__nav-btn"
-                        onClick={handlePreviousYear}
-                        aria-label="Año anterior"
-                    >
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <polyline points="15,18 9,12 15,6" />
-                        </svg>
-                    </button>
-
-                    <h2 className="year-calendar__year">{currentYear}</h2>
-
-                    <button
-                        type="button"
-                        className="year-calendar__nav-btn"
-                        onClick={handleNextYear}
-                        disabled={!canGoForward}
-                        aria-label="Año siguiente"
-                    >
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <polyline points="9,6 15,12 9,18" />
-                        </svg>
-                    </button>
-                </div>
-
-                {/* Filter */}
-                {habits.length > 0 && <HabitFilter />}
-            </div>
+            {/* Habit Filter - below header */}
+            {habits.length > 0 && <HabitFilter />}
 
             {/* Months Grid */}
             <div className="year-calendar__months">

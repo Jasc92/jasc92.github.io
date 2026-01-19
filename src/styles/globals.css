@@ -462,58 +462,10 @@ body {
   padding: var(--space-sm) 0;
 }
 
-/* Compact controls container: year nav + filter on same row */
-.year-calendar__controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.year-calendar__months {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--space-md);
-  margin-bottom: var(--space-md);
-  flex-wrap: wrap;
-}
-
-.year-calendar__year-nav {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  flex-shrink: 0;
-}
-
-.year-calendar__year {
-  font-size: var(--text-lg);
-  font-weight: 600;
-  color: var(--color-text-primary);
-  min-width: 60px;
-  text-align: center;
-}
-
-.year-calendar__nav-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  color: var(--color-text-primary);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.year-calendar__nav-btn:hover:not(:disabled) {
-  background: var(--color-bg-tertiary);
-  border-color: var(--color-primary);
-}
-
-.year-calendar__nav-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-.year-calendar__nav-btn svg {
-  width: 16px;
-  height: 16px;
 }
 
 .year-calendar__months {
@@ -959,6 +911,54 @@ body {
 .habit-menu__close-btn svg {
   width: 20px;
   height: 20px;
+}
+
+/* Year Navigation in Menu */
+.habit-menu__year-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-bg-tertiary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.habit-menu__year {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  min-width: 50px;
+  text-align: center;
+}
+
+.habit-menu__year-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.habit-menu__year-btn:hover:not(:disabled) {
+  background: var(--color-bg-primary);
+  border-color: var(--color-primary);
+}
+
+.habit-menu__year-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.habit-menu__year-btn svg {
+  width: 16px;
+  height: 16px;
 }
 
 .habit-menu__content {
@@ -1437,16 +1437,16 @@ body {
    Habit Filter Component
    ============================================ */
 .habit-filter {
-  flex: 1;
-  min-width: 0;
+  margin-bottom: var(--space-md);
   animation: fadeIn 0.3s ease;
 }
 
 .habit-filter__header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
 }
 
 .habit-filter__title {
@@ -1475,7 +1475,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-xs);
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .habit-chip {
@@ -1495,7 +1495,10 @@ body {
 .habit-chip:hover {
   transform: translateY(-1px);
   opacity: 1;
-  border-color: var(--habit-color);
+}
+
+.habit-chip:focus {
+  outline: none;
 }
 
 .habit-chip--active {

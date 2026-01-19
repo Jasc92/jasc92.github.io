@@ -21,7 +21,7 @@ interface HabitMenuProps {
  * - Edit/Delete habits
  */
 export function HabitMenu({ isOpen, onClose }: HabitMenuProps) {
-    const { habits, deleteHabit } = useHabits();
+    const { habits, deleteHabit, currentYear, setYear } = useHabits();
     const [showForm, setShowForm] = useState(false);
     const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
     const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -42,6 +42,18 @@ export function HabitMenu({ isOpen, onClose }: HabitMenuProps) {
     const handleEdit = (habit: Habit) => {
         setEditingHabit(habit);
     };
+
+    const handlePreviousYear = () => {
+        setYear(currentYear - 1);
+    };
+
+    const handleNextYear = () => {
+        setYear(currentYear + 1);
+    };
+
+    // Current year check for navigation limits
+    const currentRealYear = new Date().getFullYear();
+    const canGoForward = currentYear < currentRealYear;
 
     // Separate mandatory and optional habits
     const mandatoryHabits = habits.filter(h => h.mandatory);
@@ -71,6 +83,32 @@ export function HabitMenu({ isOpen, onClose }: HabitMenuProps) {
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <line x1="18" y1="6" x2="6" y2="18" />
                             <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+
+                {/* Year Selector */}
+                <div className="habit-menu__year-nav">
+                    <button
+                        type="button"
+                        className="habit-menu__year-btn"
+                        onClick={handlePreviousYear}
+                        aria-label="Año anterior"
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="15,18 9,12 15,6" />
+                        </svg>
+                    </button>
+                    <span className="habit-menu__year">{currentYear}</span>
+                    <button
+                        type="button"
+                        className="habit-menu__year-btn"
+                        onClick={handleNextYear}
+                        disabled={!canGoForward}
+                        aria-label="Año siguiente"
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="9,6 15,12 9,18" />
                         </svg>
                     </button>
                 </div>
