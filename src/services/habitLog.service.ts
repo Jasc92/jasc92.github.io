@@ -20,7 +20,7 @@ export class HabitLogService {
      */
     private static getState(): HabitAppState {
         const stored = StorageService.get<HabitAppState>(STORAGE_KEY);
-        return stored || { habits: [], logs: [], settings: { notificationsEnabled: false, currentYear: new Date().getFullYear() } };
+        return stored || { habits: [], logs: [], settings: { currentYear: new Date().getFullYear() } };
     }
 
     /**

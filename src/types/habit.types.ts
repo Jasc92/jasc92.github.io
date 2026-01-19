@@ -6,7 +6,7 @@
 
 /**
  * Habit entity
- * Represents a trackable habit with optional reminder
+ * Represents a trackable habit
  */
 export interface Habit {
     /** Unique identifier */
@@ -19,18 +19,6 @@ export interface Habit {
     mandatory: boolean;
     /** Creation timestamp */
     createdAt: string;
-    /** Optional reminder configuration */
-    reminder?: HabitReminder;
-}
-
-/**
- * Habit reminder configuration
- */
-export interface HabitReminder {
-    /** Whether the reminder is active */
-    enabled: boolean;
-    /** Time in "HH:MM" format (24h) */
-    time: string;
 }
 
 /**
@@ -53,7 +41,6 @@ export interface CreateHabitData {
     name: string;
     color: string;
     mandatory: boolean;
-    reminder?: HabitReminder;
 }
 
 /**
@@ -63,7 +50,6 @@ export interface UpdateHabitData {
     name?: string;
     color?: string;
     mandatory?: boolean;
-    reminder?: HabitReminder;
 }
 
 /**
@@ -79,8 +65,6 @@ export interface HabitAppState {
  * App settings
  */
 export interface HabitSettings {
-    /** Whether notifications are enabled globally */
-    notificationsEnabled: boolean;
     /** Current year being viewed */
     currentYear: number;
 }

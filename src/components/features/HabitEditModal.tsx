@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useHabits } from '../../context';
-import { NotificationService } from '../../services';
-import { Modal, ColorPicker, TimePicker } from '../common';
+import { Modal, ColorPicker } from '../common';
 import type { Habit } from '../../types';
 
 interface HabitEditModalProps {
@@ -18,7 +17,6 @@ interface HabitEditModalProps {
  * - Change name
  * - Change color
  * - Toggle mandatory
- * - Configure reminder
  * - Add completions for past days
  */
 export function HabitEditModal({ habit, onClose }: HabitEditModalProps) {
@@ -27,22 +25,9 @@ export function HabitEditModal({ habit, onClose }: HabitEditModalProps) {
     const [name, setName] = useState(habit.name);
     const [color, setColor] = useState<string>(habit.color);
     const [mandatory, setMandatory] = useState(habit.mandatory);
-    const [reminderEnabled, setReminderEnabled] = useState(habit.reminder?.enabled ?? false);
-    const [reminderTime, setReminderTime] = useState(habit.reminder?.time ?? '08:00');
     const [pastDate, setPastDate] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
-
-    const handleReminderToggle = async (enabled: boolean) => {
-        if (enabled) {
-            const permission = await NotificationService.requestPermission();
-            if (permission !== 'granted') {
-                setError('Necesitas permitir las notificaciones para usar recordatorios');
-                return;
-            }
-        }
-        setReminderEnabled(enabled);
-    };
 
     const handleAddPastDay = () => {
         if (!pastDate) {
@@ -79,9 +64,6 @@ export function HabitEditModal({ habit, onClose }: HabitEditModalProps) {
             name: name.trim(),
             color,
             mandatory,
-            reminder: reminderEnabled
-                ? { enabled: true, time: reminderTime }
-                : { enabled: false, time: reminderTime },
         });
 
         onClose();
@@ -126,31 +108,6 @@ export function HabitEditModal({ habit, onClose }: HabitEditModalProps) {
                         <span className="habit-form__toggle-thumb" />
                     </button>
                 </div>
-
-                {/* Reminder toggle */}
-                <div className="habit-form__field habit-form__field--row">
-                    <label className="habit-form__label" htmlFor="edit-reminder">
-                        Recordatorio
-                    </label>
-                    <button
-                        id="edit-reminder"
-                        type="button"
-                        className={`habit-form__toggle ${reminderEnabled ? 'habit-form__toggle--active' : ''}`}
-                        onClick={() => handleReminderToggle(!reminderEnabled)}
-                        role="switch"
-                        aria-checked={reminderEnabled}
-                    >
-                        <span className="habit-form__toggle-thumb" />
-                    </button>
-                </div>
-
-                {reminderEnabled && (
-                    <TimePicker
-                        value={reminderTime}
-                        onChange={setReminderTime}
-                        label="Hora"
-                    />
-                )}
 
                 {/* Add past day section */}
                 <div className="habit-edit__past-section">

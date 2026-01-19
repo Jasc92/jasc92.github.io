@@ -19,7 +19,6 @@ const STORAGE_KEYS = {
  * Default app settings
  */
 const DEFAULT_SETTINGS: HabitSettings = {
-    notificationsEnabled: false,
     currentYear: new Date().getFullYear(),
 };
 
@@ -85,7 +84,6 @@ export class HabitService {
             color: data.color,
             mandatory: data.mandatory,
             createdAt: new Date().toISOString(),
-            reminder: data.reminder,
         };
 
         state.habits.push(newHabit);

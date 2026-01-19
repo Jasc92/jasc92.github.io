@@ -137,11 +137,6 @@ export function HabitMenu({ isOpen, onClose }: HabitMenuProps) {
                                                         style={{ backgroundColor: habit.color }}
                                                     />
                                                     <span className="habit-menu__habit-name">{habit.name}</span>
-                                                    {habit.reminder?.enabled && (
-                                                        <span className="habit-menu__reminder">
-                                                            🔔 {habit.reminder.time}
-                                                        </span>
-                                                    )}
                                                 </div>
                                                 <div className="habit-menu__actions">
                                                     <button
@@ -180,11 +175,6 @@ export function HabitMenu({ isOpen, onClose }: HabitMenuProps) {
                                                         style={{ backgroundColor: habit.color }}
                                                     />
                                                     <span className="habit-menu__habit-name">{habit.name}</span>
-                                                    {habit.reminder?.enabled && (
-                                                        <span className="habit-menu__reminder">
-                                                            🔔 {habit.reminder.time}
-                                                        </span>
-                                                    )}
                                                 </div>
                                                 <div className="habit-menu__actions">
                                                     <button

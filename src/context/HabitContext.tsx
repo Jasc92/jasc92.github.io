@@ -6,7 +6,7 @@ import {
     useCallback,
     type ReactNode
 } from 'react';
-import { HabitService, HabitLogService, NotificationService } from '../services';
+import { HabitService, HabitLogService } from '../services';
 import type {
     Habit,
     CreateHabitData,
@@ -70,7 +70,6 @@ export function HabitProvider({ children }: HabitProviderProps) {
     const [selectedHabitIds, setSelectedHabitIds] = useState<string[]>([]);
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const [settings, setSettings] = useState<HabitSettings>({
-        notificationsEnabled: false,
         currentYear: new Date().getFullYear(),
     });
     const [isLoading, setIsLoading] = useState(true);
@@ -88,9 +87,6 @@ export function HabitProvider({ children }: HabitProviderProps) {
         setHabits(loadedHabits);
         setSettings(loadedSettings);
         setDayStatusMap(statusMap);
-
-        // Initialize notifications for habits with reminders
-        NotificationService.initializeReminders(loadedHabits);
 
         setIsLoading(false);
     }, [currentYear, selectedHabitIds]);
@@ -113,11 +109,6 @@ export function HabitProvider({ children }: HabitProviderProps) {
     const createHabit = useCallback((data: CreateHabitData): Habit => {
         const newHabit = HabitService.createHabit(data);
 
-        // Schedule notification if reminder is enabled
-        if (newHabit.reminder?.enabled) {
-            NotificationService.scheduleReminder(newHabit);
-        }
-
         // Refresh local state
         setHabits(HabitService.getHabits());
 
@@ -131,12 +122,6 @@ export function HabitProvider({ children }: HabitProviderProps) {
         const updatedHabit = HabitService.updateHabit(id, updates);
 
         if (updatedHabit) {
-            // Update notification schedule
-            NotificationService.cancelReminder(id);
-            if (updatedHabit.reminder?.enabled) {
-                NotificationService.scheduleReminder(updatedHabit);
-            }
-
             // Refresh local state
             setHabits(HabitService.getHabits());
         }
@@ -148,9 +133,6 @@ export function HabitProvider({ children }: HabitProviderProps) {
      * Delete a habit
      */
     const deleteHabit = useCallback((id: string): boolean => {
-        // Cancel any scheduled notifications
-        NotificationService.cancelReminder(id);
-
         const success = HabitService.deleteHabit(id);
 
         if (success) {
@@ -162,9 +144,6 @@ export function HabitProvider({ children }: HabitProviderProps) {
             // Refresh local state
             const updatedHabits = HabitService.getHabits();
             setHabits(updatedHabits);
-            // Note: we can't use existing selectedHabitIds here directly inside a callback if it's stale, 
-            // but we're reloading everything.
-            // However, since we might have just removed the selected ID, we should use the filtered list.
             const currentSelected = selectedHabitIds.filter(hId => hId !== id);
             setDayStatusMap(HabitLogService.getDayStatusMap(currentYear, updatedHabits, currentSelected));
         }
@@ -218,8 +197,6 @@ export function HabitProvider({ children }: HabitProviderProps) {
                 ? prev.filter(id => id !== habitId)
                 : [...prev, habitId];
 
-            // We need to trigger a status map update when selection changes
-            // Use setTimeout to allow state to settle or simpler: relying on useEffect dependency
             return newSelection;
         });
     }, []);
