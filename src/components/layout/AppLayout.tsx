@@ -1,5 +1,4 @@
 import { useState, type ReactNode } from 'react';
-import { ConnectionStatus } from '../common';
 import { HabitMenu } from '../features/HabitMenu';
 import { usePWAInstall } from '../../hooks';
 
@@ -45,8 +44,6 @@ export function Header({ title = 'Habit Tracker', onMenuToggle }: HeaderProps) {
 
                 {/* Right side actions */}
                 <div className="header__actions">
-                    {/* Connection Status */}
-                    <ConnectionStatus className="header__status" />
 
                     {/* Install PWA Button */}
                     {canInstall && (

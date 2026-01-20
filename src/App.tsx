@@ -1,7 +1,6 @@
 import { AppLayout } from './components';
 import { NetworkProvider, HabitProvider } from './context';
 import { YearCalendar } from './components/features';
-import { version } from '../package.json';
 
 /**
  * App Component
@@ -12,7 +11,7 @@ function App() {
   return (
     <NetworkProvider>
       <HabitProvider>
-        <AppLayout headerTitle={`Habit Tracker v${version}`}>
+        <AppLayout headerTitle="Habit Tracker">
           <YearCalendar />
         </AppLayout>
       </HabitProvider>
