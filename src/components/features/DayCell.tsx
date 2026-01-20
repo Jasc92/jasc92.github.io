@@ -49,14 +49,17 @@ export function DayCell({
             return { background: colors[0] };
         }
 
-        // Create gradient for multiple colors
+        // Create conic gradient (pie chart) for multiple colors
+        // This gives distinct slices instead of a blended gradient
+        const total = colors.length;
         const gradientStops = colors.map((color, i) => {
-            const percent = (i / (colors.length - 1)) * 100;
-            return `${color} ${percent}%`;
+            const startPercent = (i / total) * 100;
+            const endPercent = ((i + 1) / total) * 100;
+            return `${color} ${startPercent}% ${endPercent}%`;
         }).join(', ');
 
         return {
-            background: `linear-gradient(135deg, ${gradientStops})`,
+            background: `conic-gradient(${gradientStops})`,
         };
     }, [status, isFuture]);
 

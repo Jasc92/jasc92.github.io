@@ -30,9 +30,11 @@ export function DayModal({ date, onClose }: DayModalProps) {
         toggleCompletion(habitId, date);
     };
 
-    // Separate mandatory and optional habits
-    const mandatoryHabits = habits.filter(h => h.mandatory);
-    const optionalHabits = habits.filter(h => !h.mandatory);
+    // Filter habits that were active on this date (startDate <= date)
+    // and separate mandatory from optional
+    const activeHabits = habits.filter(h => !h.startDate || h.startDate <= date);
+    const mandatoryHabits = activeHabits.filter(h => h.mandatory);
+    const optionalHabits = activeHabits.filter(h => !h.mandatory);
 
     return (
         <Modal onClose={onClose} title={formattedDate}>

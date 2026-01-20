@@ -465,13 +465,7 @@ body {
 .year-calendar__months {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-md);
-}
-
-.year-calendar__months {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-md);
+  gap: var(--space-sm);
 }
 
 @media (min-width: 640px) {
@@ -550,7 +544,7 @@ body {
 .month-grid {
   background: var(--color-bg-secondary);
   border-radius: var(--radius-lg);
-  padding: var(--space-md);
+  padding: var(--space-xs);
   border: 1px solid var(--color-border);
 }
 
@@ -565,7 +559,7 @@ body {
 .month-grid__weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 3px;
+  gap: 1px;
   margin-bottom: var(--space-xs);
 }
 
@@ -579,14 +573,12 @@ body {
 .month-grid__days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 3px;
+  gap: 1px;
 }
 
 .month-grid__empty {
   width: 100%;
   aspect-ratio: 1;
-  min-width: 8px;
-  max-width: 16px;
 }
 
 /* ============================================
@@ -595,13 +587,12 @@ body {
 .day-cell {
   width: 100%;
   aspect-ratio: 1;
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-sm);
   border: none;
   cursor: pointer;
   transition: transform var(--transition-fast), box-shadow var(--transition-fast);
   position: relative;
-  min-width: 8px;
-  max-width: 16px;
+  /* Removed min/max width to fill the grid cell */
 }
 
 .day-cell:hover:not(:disabled) {
