@@ -35,32 +35,69 @@ export function DayCell({
 }: DayCellProps) {
 
     const dotStyle = useMemo(() => {
-        if (!status || status.completedColors.length === 0) {
-            // No completions
+        // Default: no completions or future day
+        if (isFuture) {
             return {
-                background: isFuture ? 'transparent' : 'var(--color-bg-tertiary)',
-                border: isFuture ? '1px solid var(--color-border)' : 'none',
+                background: 'transparent',
+                border: '1px solid var(--color-border)',
             };
         }
 
-        const colors = status.completedColors;
-
-        if (colors.length === 1) {
-            return { background: colors[0] };
+        if (!status) {
+            return { background: 'var(--color-bg-tertiary)' };
         }
 
-        // Create conic gradient (pie chart) for multiple colors
-        // This gives distinct slices instead of a blended gradient
-        const total = colors.length;
-        const gradientStops = colors.map((color, i) => {
-            const startPercent = (i / total) * 100;
-            const endPercent = ((i + 1) / total) * 100;
-            return `${color} ${startPercent}% ${endPercent}%`;
-        }).join(', ');
+        // In filtered mode: show individual habit colors
+        if (status.isFiltered && status.completedColors.length > 0) {
+            const colors = status.completedColors;
+            if (colors.length === 1) {
+                return { background: colors[0] };
+            }
+            // Multiple filtered habits: use conic gradient
+            const total = colors.length;
+            const gradientStops = colors.map((color, i) => {
+                const startPercent = (i / total) * 100;
+                const endPercent = ((i + 1) / total) * 100;
+                return `${color} ${startPercent}% ${endPercent}%`;
+            }).join(', ');
+            return { background: `conic-gradient(${gradientStops})` };
+        }
 
-        return {
-            background: `conic-gradient(${gradientStops})`,
-        };
+        // Normal mode color logic:
+        const totalHabits = status.mandatoryTotal + status.optionalTotal;
+        const completedHabits = status.mandatoryCompleted + status.optionalCompleted;
+        const allMandatoryDone = status.mandatoryTotal > 0 &&
+            status.mandatoryCompleted === status.mandatoryTotal;
+        const allOptionalDone = status.optionalTotal > 0 &&
+            status.optionalCompleted === status.optionalTotal;
+        const someOptionalDone = status.optionalCompleted > 0;
+
+        // 🟢 Green: ALL habits completed (mandatory + optional)
+        if (totalHabits > 0 && completedHabits === totalHabits) {
+            return { background: 'var(--color-success)' }; // Green
+        }
+
+        // 🟡 Yellow: Mix of mandatory and optional completed (but not all)
+        if (allMandatoryDone && someOptionalDone && !allOptionalDone) {
+            return { background: 'var(--color-warning)' }; // Yellow
+        }
+
+        // 🔵 Blue: Only mandatory habits completed (no optional or all optional missing)
+        if (allMandatoryDone) {
+            return { background: 'var(--color-primary)' }; // Blue
+        }
+
+        // 🔴 Red: No activity (nothing completed but habits exist)
+        if (totalHabits > 0 && completedHabits === 0) {
+            return { background: 'var(--color-error)' }; // Red
+        }
+
+        // Partial progress (some but not all mandatory)
+        if (completedHabits > 0) {
+            return { background: 'var(--color-warning)' }; // Yellow for partial
+        }
+
+        return { background: 'var(--color-bg-tertiary)' };
     }, [status, isFuture]);
 
     // Check if mandatory habits are incomplete (for red indicator)

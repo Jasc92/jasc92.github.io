@@ -662,10 +662,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 6px;
+  font-size: 10px;
   font-weight: 600;
   color: var(--color-text-primary);
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.9);
   pointer-events: none;
   line-height: 1;
 }
